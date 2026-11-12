@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}{{ task.name }}{% endblock %}
+
+{% block content %}
+<div class="page-heading">
+  <div>
+    <p class="breadcrumb"><a href="{{ url_for('index') }}">任务列表</a> / 任务详情</p>
+    <h1>{{ task.name }}</h1>
+    <div class="badge-row">
+      <span class="badge {% if task.status == '已完成' %}badge-status-done{% elif task.status == '进行中' %}badge-status-doing{% else %}badge-status-todo{% endif %}">
+        {{ task.status }}
+      </span>
+      <span class="badge {% if task.priority == '高' %}badge-priority-high{% elif task.priority == '中' %}badge-priority-medium{% else %}badge-priority-low{% endif %}">
+        优先级：{{ task.priority }}
+      </span>
+      {% if task.is_overdue %}
+        <span class="badge badge-overdue">逾期</span>
+      {% elif task.is_due_soon %}
+        <span class="badge badge-soon">即将到期</span>
+      {% endif %}
+    </div>
+  </div>
+  <div class="heading-actions">
+    <a class="button button-secondary" href="{{ url_for('edit_task', task_id=task.id) }}">编辑任务</a>
+    <a class="button button-danger" href="{{ url_for('delete_task', task_id=task.id) }}">删除任务</a>
+  </div>
+</div>
+
+<div class="detail-layout">
+  <section class="panel">
+    <h2>任务信息</h2>
+    <dl class="detail-list">
+      <div>
+        <dt>所属课程</dt>
+        <dd>{{ task.course }}</dd>
+      </div>
+      <div>
+        <dt>截止日期</dt>
+        <dd>{{ task.due_date }}</dd>
+      </div>
+      <div>
+        <dt>优先级</dt>
+        <dd>{{ task.priority }}</dd>
+      </div>
+      <div>
+        <dt>当前状态</dt>
+        <dd>{{ task.status }}</dd>
+      </div>
+      <div>
+        <dt>创建时间</dt>
+        <dd>{{ task.created_at }}</dd>
+      </div>
+      <div>
+        <dt>更新时间</dt>
+        <dd>{{ task.updated_at }}</dd>
+      </div>
+    </dl>
+  </section>
+
+  <section class="panel">
+    <h2>任务描述</h2>
+    {% if task.description %}
+      <p class="description-text">{{ task.description }}</p>
+    {% else %}
+      <p class="muted">暂无描述。</p>
+    {% endif %}
+  </section>
+</div>
+
+<section class="panel status-panel">
+  <h2>调整状态</h2>
+  <form class="status-form" method="post" action="{{ url_for('update_task_status', task_id=task.id) }}">
+    <label class="sr-only" for="status">任务状态</label>
+    <select id="status" name="status">
+      {% for status in statuses %}
+        <option value="{{ status }}" {% if status == task.status %}selected{% endif %}>{{ status }}</option>
+      {% endfor %}
+    </select>
+    <button class="button button-secondary" type="submit">更新状态</button>
+  </form>
+</section>
+
+<div class="back-link">
+  <a href="{{ url_for('index') }}">← 返回任务列表</a>
+</div>
+{% endblock %}

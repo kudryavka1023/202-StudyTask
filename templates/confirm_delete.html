@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}确认删除{% endblock %}
+
+{% block content %}
+<div class="confirm-card">
+  <div class="alert alert-error" role="alert">此操作不可撤销，请确认。</div>
+  <h1>确认删除任务</h1>
+  <p>确定要删除任务“<strong>{{ task.name }}</strong>”吗？</p>
+
+  <dl class="detail-list compact">
+    <div>
+      <dt>所属课程</dt>
+      <dd>{{ task.course }}</dd>
+    </div>
+    <div>
+      <dt>截止日期</dt>
+      <dd>{{ task.due_date }}</dd>
+    </div>
+    <div>
+      <dt>当前状态</dt>
+      <dd>{{ task.status }}</dd>
+    </div>
+  </dl>
+
+  <div class="form-actions">
+    <form method="post" action="{{ url_for('delete_task', task_id=task.id) }}">
+      <button class="button button-danger" type="submit">确认删除</button>
+    </form>
+    <a class="button button-ghost" href="{{ url_for('task_detail', task_id=task.id) }}">取消</a>
+  </div>
+</div>
+{% endblock %}
