@@ -82,3 +82,14 @@ collected 15 items
 | FR-08 统计 | T8 | 通过 |
 | FR-09 持久化 | T10 | 通过 |
 | FR-10 中文界面与错误处理 | T2、AC-01、AC-05 | 通过 |
+
+## 五、云端部署冒烟验证
+
+- 验证时间：2026-11-12
+- 公网地址：<http://193.112.133.193:18080/>
+- 验证方式：从本地网络向腾讯云服务器发起真实 HTTP 请求
+- `GET /`：HTTP 200，页面标题包含 StudyTask，响应头 `Server: gunicorn`
+- `GET /static/style.css`：HTTP 200，`Content-Type: text/css; charset=utf-8`
+- `GET /tasks/new`：HTTP 200
+- `GET /nonexistent`：HTTP 404
+- 结论：公网访问、静态资源和主要页面路由均正常；该地址用于课程演示，演示结束后应停止服务或限制来源 IP。
